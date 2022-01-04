@@ -28,7 +28,7 @@ def create_embedding_matrix(encoder,dict_w2v):
         embedding_vector =  dict_w2v.get(word)
 
         if embedding_vector is not None: # dictionary contains word
-            test = encoder.encode(word)
+            # test = encoder.encode(word)
             token_id = encoder.encode(word)[0]
             embedding_matrix[token_id] = embedding_vector
         else:
