@@ -4,24 +4,65 @@ import numpy as np
 import pickle
 import definition
 from FeatureEngineering.processing import Encoding
+from flask import Flask, render_template, session, redirect, url_for, session
+from flask_wtf import FlaskForm
+from wtforms import TextAreaField, SubmitField
 
-test = "Man this is such a great product"
 
-test_feature = np.array([test])
-test_label = np.arange(5).reshape(1,5)
 
-test_dataset = tf.data.Dataset.from_tensor_slices((test_feature, test_label))
+def get_prediction(review_text_json):
+    text = review_text_json['review']
+    review_feature = np.array([text])
+    review_label = np.arange(5).reshape(1, 5)
 
-with open(definition.ENCODER_PATH, 'rb') as encoder_file:
-    encoder = pickle.load(encoder_file)
+    review_dataset = tf.data.Dataset.from_tensor_slices((review_feature, review_label))
 
-ec = Encoding(encoder)
-encoded_test = test_dataset.map(ec.encode_tf_fn,
-                                  num_parallel_calls=tf.data.experimental.AUTOTUNE)
+    with open(definition.ENCODER_PATH, 'rb') as encoder_file:
+        encoder = pickle.load(encoder_file)
 
-model_load = tf.keras.models.load_model(definition.MODEL_PATH)
-prediction = model_load.predict(encoded_test.batch(1))
-prediction_dict = dict(enumerate(prediction.flatten(), 1))
-prediction_dict = dict(sorted(prediction_dict.items(), key=lambda item: item[1]))
+    ec = Encoding(encoder)
+    encoded_test = review_dataset.map(ec.encode_tf_fn,
+                                      num_parallel_calls=tf.data.experimental.AUTOTUNE)
 
-print(prediction_dict)
+    model_load = tf.keras.models.load_model(definition.MODEL_PATH)
+    prediction = model_load.predict(encoded_test.batch(1))
+    prediction_dict = dict(enumerate(prediction.flatten(), 1))
+    prediction_dict = dict(sorted(prediction_dict.items(), key=lambda item: item[1]))
+
+    print(prediction_dict)
+    return prediction_dict
+
+
+class FlowerForm(FlaskForm):
+    review = TextAreaField('review')
+
+    submit = SubmitField('Analyze')
+
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'someRandomKey'
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    # Create instance of the form.
+    form = FlowerForm()
+    # If the form is valid on submission (we'll talk about validation next)
+    if form.validate_on_submit():
+        # Grab the data from the breed on the form.
+
+        session['review'] = form.review.data
+        return redirect(url_for("prediction"))
+
+    return render_template('home.html', form=form)
+
+
+@app.route('/prediction')
+def prediction():
+    content = {}
+
+    content['review'] = float(session['review'])
+    results = get_prediction(review_text_json=content)
+    return render_template('prediction.html', results=results)
+
+
+if __name__ == '__main_predict__':
+    app.run(debug=True)
