@@ -5,6 +5,7 @@ from FeatureEngineering.glove import load_glove, create_embedding_matrix, model_
 from FeatureEngineering.processing import FeatureEngineering, Encoding
 from Preprocessing.preprocessing import load_dataframe
 from FeatureEngineering.plotting import plot_loss_acc
+import pickle
 
 df_sentiment = load_dataframe("/home/thomasm/Documents/Datasets/Sentiment/Software_5.json")
 feature_engineering = FeatureEngineering(df_sentiment)
@@ -13,6 +14,11 @@ DATASET_SIZE = df_sentiment.size
 dataset = feature_engineering.convert_to_tfds()
 
 encoder = feature_engineering.tokenizing(dataset)
+
+
+with open('filename.pickle', 'wb') as encoder_file:
+    pickle.dump(encoder, encoder_file, protocol=pickle.HIGHEST_PROTOCOL)
+
 vocab_size = encoder.vocab_size
 print("Vocab size: ", vocab_size)
 
@@ -52,7 +58,7 @@ encoded_test_batched = encoded_test.batch(BATCH_SIZE).prefetch(100)
 
 with tf.device('gpu'):
     model_history = model_fine_tuning.fit(encoded_train_batched, epochs=15, validation_data=encoded_test_batched)
-
+model_history.save('/home/thomasm/ReviewAssessment/Model_saved_AMAZ_mullti')
 plot_loss_acc(model_history)
 
 model_fine_tuning.evaluate(encoded_test_batched)

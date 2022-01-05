@@ -1,10 +1,8 @@
 import os
 import tensorflow as tf
 import numpy as np
-from FeatureEngineering.glove import load_glove, create_embedding_matrix, model_creation
-from FeatureEngineering.processing import FeatureEngineering, Encoding
-from Preprocessing.preprocessing import load_dataframe
-from FeatureEngineering.plotting import plot_loss_acc
+import pickle
+from FeatureEngineering.processing import Encoding
 
 checkpoint_dir = os.path.dirname("/home/thomasm/ReviewAssessment/Model_saved_AMAZ_mullti/")
 test = "Doom---just the name alone makes you drool over your BFG 9000 and Shotgun. Direct from the PC to your SNES system Doom is a fun FPS on the SNES. With the used of the FX2 chip the graphics are not bad for it's time and the music is quite good. However there are some cons to the game... 1: You can't save your game, once you start you have to play all the way through but you can gain access to the other chapters but selecting harder difficulty setting.2: Controls are VERY rough on your D-pad hand. You move a bit sluggish and the " \
@@ -14,6 +12,9 @@ test_feature = np.array([test])
 test_label = np.arange(5).reshape(1,5)
 
 test_dataset = tf.data.Dataset.from_tensor_slices((test_feature, test_label))
+
+with open('filename.pickle', 'rb') as encoder_file:
+    encoder = pickle.load(encoder_file)
 
 ec = Encoding(encoder)
 encoded_test = test_dataset.map(ec.encode_tf_fn,
