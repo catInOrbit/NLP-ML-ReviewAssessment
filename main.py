@@ -8,8 +8,6 @@ from flask import Flask, render_template, session, redirect, url_for, session
 from flask_wtf import FlaskForm
 from wtforms import TextAreaField, SubmitField
 
-
-
 def get_prediction(review_text_json):
     text = review_text_json['review']
     review_feature = np.array([text])
@@ -59,10 +57,10 @@ def index():
 def prediction():
     content = {}
 
-    content['review'] = float(session['review'])
+    content['review'] = str(session['review'])
     results = get_prediction(review_text_json=content)
     return render_template('prediction.html', results=results)
 
 
-if __name__ == '__main_predict__':
+if __name__ == '__main__':
     app.run(debug=True)
