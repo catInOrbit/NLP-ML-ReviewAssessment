@@ -4,6 +4,8 @@ from tensorflow.keras.preprocessing import sequence
 import tensorflow as tf
 import tensorflow_datasets as tfds
 import pickle
+
+
 class FeatureEngineering():
     def __init__(self, dataframe):
         self.dataframe = dataframe
@@ -31,7 +33,8 @@ class FeatureEngineering():
         encoder = tfds.deprecated.text.TokenTextEncoder(vocabulary_set,
                                                         lowercase=True,
                                                         tokenizer=tokenizer)
-        return  encoder
+        return encoder
+
 
 class Encoding():
     def __init__(self, encoder):
