@@ -1,1 +1,1 @@
-worker: python main_predict.py
+web: gunicorn wsgi:app

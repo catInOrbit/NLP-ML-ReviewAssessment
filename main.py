@@ -62,5 +62,5 @@ def prediction():
     return render_template('prediction.html', results=results)
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# if __name__ == '__main__':
+#     app.run(debug=True)
