@@ -56,11 +56,10 @@ encoded_train_batched = encoded_train.batch(BATCH_SIZE).prefetch(100)
 encoded_test_batched = encoded_test.batch(BATCH_SIZE).prefetch(100)
 
 with tf.device('gpu'):
-    model_history = model_fine_tuning.fit(encoded_train_batched, epochs=15, validation_data=encoded_test_batched)
+    model_history = model_fine_tuning.fit(encoded_train_batched, epochs=2, validation_data=encoded_test_batched)
 
 model_fine_tuning.evaluate(encoded_test_batched)
-model_fine_tuning.save(definition.MODEL_PATH)
-
+model_fine_tuning.save_weights(definition.MODEL_WEIGHTS_PATH)
 plot_loss_acc(model_history)
 
 
