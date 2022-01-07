@@ -33,7 +33,6 @@ def get_prediction(review_text_json):
 
 class FlowerForm(FlaskForm):
     review = TextAreaField('review')
-
     submit = SubmitField('Analyze')
 
 app = Flask(__name__)
