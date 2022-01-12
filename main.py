@@ -31,26 +31,20 @@ def get_prediction(review_text_json):
     return prediction_dict
 
 
-class FlowerForm(FlaskForm):
+class InputForm(FlaskForm):
     review = TextAreaField('review')
     submit = SubmitField('Analyze')
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'someRandomKey'
+app.config['SECRET_KEY'] = '03c0353d-c515-4627-a567-d7f5e3d048a2'
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    # Create instance of the form.
-    form = FlowerForm()
-    # If the form is valid on submission (we'll talk about validation next)
+    form = InputForm()
     if form.validate_on_submit():
-        # Grab the data from the breed on the form.
-
         session['review'] = form.review.data
         return redirect(url_for("prediction"))
-
     return render_template('home.html', form=form)
-
 
 @app.route('/prediction')
 def prediction():
