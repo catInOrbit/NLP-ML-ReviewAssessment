@@ -27,3 +27,10 @@ A small NLP(Natural Language Processing) model using Bidirectional LSTM and Glov
 
 **Accuracy**
 ![accuracy](https://user-images.githubusercontent.com/49814026/148502077-98c00075-c619-4aff-8ef3-f2b88db8ac2c.png)
+
+# Run Project
+Local 
+ - Clone project down
+ - Run `main.py` for prediction, `main_train.py` for training
+Jupyter
+-Access [Jupyter file] https://github.com/catInOrbit/ReviewAssessment/blob/main/ReviewSentiment(1).ipynb
